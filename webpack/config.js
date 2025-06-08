@@ -11,7 +11,7 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "../dist"),
-    publicPath: "./",
+    publicPath: "/",
   },
   module: {
     rules: [
@@ -49,7 +49,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html",
     }),
-
+    new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin({
       patterns: [{ from: "public", to: "." }],
     }),
@@ -61,7 +61,13 @@ module.exports = {
     port: 8080,
     open: true,
     hot: true,
+    liveReload: true,
+    watchFiles: ["src/**/*"],
     compress: true,
     historyApiFallback: true,
+    client: {
+      overlay: true,
+      progress: true,
+    },
   },
 };
