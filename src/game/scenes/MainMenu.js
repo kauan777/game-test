@@ -14,7 +14,7 @@ export class MainMenu extends Scene {
     this.add.image(514, 282, "logo").setTint(0x000000).setAlpha(0.4);
     this.logo = this.add.image(512, 280, "logo").setTint(0xeeeeff);
 
-    // Música de fundo original
+    // Música de fundo só toca após interação do usuário
     this.menuMusic = this.sound.add("menuMusic", { loop: true, volume: 0.3 });
     this.musicStarted = false;
 
@@ -57,10 +57,20 @@ export class MainMenu extends Scene {
       if (!this.musicStarted) {
         this.menuMusic.play();
         this.musicStarted = true;
+        if (this.soundOnIcon && this.soundOffIcon) {
+          this.soundOnIcon.setVisible(true);
+          this.soundOffIcon.setVisible(false);
+        }
       }
       if (this.menuMusic && this.menuMusic.isPlaying) {
         this.menuMusic.stop();
+        this.musicStarted = false;
+        if (this.soundOnIcon && this.soundOffIcon) {
+          this.soundOnIcon.setVisible(false);
+          this.soundOffIcon.setVisible(true);
+        }
       }
+      // FADE OUT PARA A TRANSIÇÃO
       this.cameras.main.fadeOut(500);
       this.time.delayedCall(500, () => {
         this.scene.start("Game", { mapKey: "map", health: 3 });
@@ -199,7 +209,9 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
     this.musicButton.add(this.soundOffIcon);
 
-    this.soundOffIcon.setVisible(false);
+    // Inicializa ícone como mutado
+    this.soundOnIcon.setVisible(false);
+    this.soundOffIcon.setVisible(true);
 
     musicButtonBg.on("pointerdown", () => {
       if (!this.musicStarted) {
